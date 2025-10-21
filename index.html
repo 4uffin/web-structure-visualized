@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Global Web Repo: Functional Browser View</title>
     <style>
-        /* CSS to simulate a minimal browser window/UI, respecting fixed-width concepts */
+        /* (Styles remain the same as before) */
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f2f5; 
@@ -49,10 +49,9 @@
             display: block;
         }
         .nav-button {
-            /* Styling the buttons to look clickable */
             cursor: pointer;
             padding: 0 5px;
-            user-select: none; /* Prevent text selection on click */
+            user-select: none;
             transition: opacity 0.1s;
         }
         .nav-button:hover {
@@ -64,11 +63,11 @@
 
     <div class="browser-window">
         <div class="browser-bar">
-            <span class="nav-button" onclick="navigateFrame('back')">&#9664;</span> &nbsp;
-            <span class="nav-button" onclick="navigateFrame('forward')">&#9654;</span> &nbsp;
-            <span class="nav-button" onclick="navigateFrame('reload')">&#x21BB;</span>
+            <span class="nav-button" id="backBtn">&#9664;</span> &nbsp;
+            <span class="nav-button" id="forwardBtn">&#9654;</span> &nbsp;
+            <span class="nav-button" id="reloadBtn">&#x21BB;</span>
 
-            <div class="url-box">
+            <div class="url-box" id="urlBox">
                 **.../The-Global-Web-Repo/site-A-google.com/index.html**
             </div>
             <span>...</span>
@@ -83,30 +82,100 @@
     </div>
     
     <script>
-        // Your core JavaScript to control the browser frame!
-        function navigateFrame(action) {
-            const frame = document.getElementById('conceptual_browser_iframe');
-            
-            // Check if the frame content loaded successfully
-            if (!frame || !frame.contentWindow) {
-                console.error("Browser frame content not available.");
-                return;
-            }
+        const iframe = document.getElementById('conceptual_browser_iframe');
+        const urlBox = document.getElementById('urlBox');
+        
+        // Custom, client-side history stack (like LocalStorage-based state management)
+        let historyStack = ["site-A-google.com/index.html"]; // Start with the home page
+        let historyPointer = 0;
 
-            // Standard browser history controls, applied to the iframe's context
-            if (action === 'back') {
-                frame.contentWindow.history.back();
-            } else if (action === 'forward') {
-                frame.contentWindow.history.forward();
-            } else if (action === 'reload') {
-                frame.contentWindow.location.reload();
+        function updateURLDisplay() {
+            urlBox.textContent = `.../The-Global-Web-Repo/${historyStack[historyPointer]}`;
+        }
+
+        // --- Core Navigation Functions ---
+
+        // Called when the iframe's content location changes (e.g., a link is clicked)
+        function handleNavigation(newSrc) {
+            // Check if the new source is different from the current one
+            if (newSrc !== historyStack[historyPointer]) {
+                
+                // Truncate stack from the current pointer forward
+                historyStack.length = historyPointer + 1;
+                
+                // Add the new location to the stack
+                historyStack.push(newSrc);
+                historyPointer++;
+                
+                // Manually load the page and update the UI
+                iframe.src = newSrc;
+                updateURLDisplay();
             }
         }
-    </script>
+        
+        // This function simulates the browser button clicks
+        function navigateFrame(direction) {
+            if (direction === 'back' && historyPointer > 0) {
+                historyPointer--;
+                iframe.src = historyStack[historyPointer];
+            } else if (direction === 'forward' && historyPointer < historyStack.length - 1) {
+                historyPointer++;
+                iframe.src = historyStack[historyPointer];
+            } else if (direction === 'reload') {
+                iframe.contentWindow.location.reload(true); // Force reload
+                return;
+            }
+            updateURLDisplay();
+        }
 
+        // --- Event Listeners ---
+
+        // Assigning the navigation functions to the buttons
+        document.getElementById('backBtn').onclick = () => navigateFrame('back');
+        document.getElementById('forwardBtn').onclick = () => navigateFrame('forward');
+        document.getElementById('reloadBtn').onclick = () => navigateFrame('reload');
+
+        // This is the CRUCIAL part: It intercepts clicks within the iframe's content
+        iframe.onload = function() {
+            // We need to re-attach the listener every time the iframe reloads
+            // This is necessary because the content (site-A, site-B, etc.) is changing
+            const contentDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+            contentDoc.querySelectorAll('a').forEach(link => {
+                // Remove existing listeners to prevent duplicates
+                link.removeEventListener('click', linkHandler);
+                // Add the new, custom listener
+                link.addEventListener('click', linkHandler);
+            });
+            updateURLDisplay();
+        };
+
+        function linkHandler(event) {
+            const link = event.currentTarget;
+            const newPath = link.getAttribute('href');
+            
+            // Only handle relative links within our structure (not external)
+            if (newPath && !newPath.startsWith('http')) {
+                event.preventDefault(); // Stop the default iframe navigation
+                
+                // Logic to resolve the path relative to the browser index
+                // This converts '../site-B/index.html' to 'site-B/index.html' for the stack
+                // NOTE: This simple logic assumes all links are relative to the *root* of the iframe's content.
+                let targetPath = newPath.replace(/\.\.\//g, '');
+                
+                handleNavigation(targetPath);
+            }
+            // For the initial load, we call it here to setup the first history entry
+        }
+        
+        // Initial setup for the Google link on load
+        iframe.onload();
+
+    </script>
+    
     <footer>
         <p style="font-size: 12px; margin-top: 15px;">
-            **Conceptual Browser App v1.0** - Using **JavaScript** to mimic browser functions.
+            **Conceptual Browser App v2.0** - Implementing a custom **client-side history stack** to manage navigation.
         </p>
     </footer>
     
