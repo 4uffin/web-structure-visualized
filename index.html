@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Global Web Repo: Browser View</title>
+    <title>The Global Web Repo: Functional Browser View</title>
     <style>
         /* CSS to simulate a minimal browser window/UI, respecting fixed-width concepts */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f2f5; /* Light gray background for the "desktop" */
+            background-color: #f0f2f5; 
             margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center the browser window */
+            align-items: center; 
         }
         .browser-window {
-            width: 1000px; /* A fixed width for the entire browser frame */
+            width: 1000px; 
             height: 700px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border-radius: 8px;
@@ -42,12 +42,21 @@
             margin: 0 20px;
             color: #333;
         }
-        /* The Iframe is the content area */
         .content-frame {
             width: 100%;
-            height: calc(100% - 36px); /* Full height minus the browser bar */
+            height: calc(100% - 36px); 
             border: none;
             display: block;
+        }
+        .nav-button {
+            /* Styling the buttons to look clickable */
+            cursor: pointer;
+            padding: 0 5px;
+            user-select: none; /* Prevent text selection on click */
+            transition: opacity 0.1s;
+        }
+        .nav-button:hover {
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -55,9 +64,9 @@
 
     <div class="browser-window">
         <div class="browser-bar">
-            <span>&#9664;</span> &nbsp;
-            <span>&#9654;</span> &nbsp;
-            <span>&#x21BB;</span>
+            <span class="nav-button" onclick="navigateFrame('back')">&#9664;</span> &nbsp;
+            <span class="nav-button" onclick="navigateFrame('forward')">&#9654;</span> &nbsp;
+            <span class="nav-button" onclick="navigateFrame('reload')">&#x21BB;</span>
 
             <div class="url-box">
                 **.../The-Global-Web-Repo/site-A-google.com/index.html**
@@ -72,10 +81,32 @@
             id="conceptual_browser_iframe"
         ></iframe>
     </div>
+    
+    <script>
+        // Your core JavaScript to control the browser frame!
+        function navigateFrame(action) {
+            const frame = document.getElementById('conceptual_browser_iframe');
+            
+            // Check if the frame content loaded successfully
+            if (!frame || !frame.contentWindow) {
+                console.error("Browser frame content not available.");
+                return;
+            }
+
+            // Standard browser history controls, applied to the iframe's context
+            if (action === 'back') {
+                frame.contentWindow.history.back();
+            } else if (action === 'forward') {
+                frame.contentWindow.history.forward();
+            } else if (action === 'reload') {
+                frame.contentWindow.location.reload();
+            }
+        }
+    </script>
 
     <footer>
         <p style="font-size: 12px; margin-top: 15px;">
-            **Conceptual Browser App v1.0** - Launching the entire web from the root of the Git repo.
+            **Conceptual Browser App v1.0** - Using **JavaScript** to mimic browser functions.
         </p>
     </footer>
     
