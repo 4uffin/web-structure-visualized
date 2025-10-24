@@ -5,19 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Global Web Repo: Functional Browser View</title>
     <style>
-        /* (Styles remain the same as before) */
+        /* --- MOBILE-FRIENDLY CHANGES START --- */
+        
+        * {
+            box-sizing: border-box; /* Makes layout calculations more predictable */
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f2f5; 
             margin: 0;
-            padding: 20px;
+            padding: 10px; /* Reduced padding for mobile */
             display: flex;
             flex-direction: column;
             align-items: center; 
         }
         .browser-window {
-            width: 1000px; 
-            height: 700px;
+            max-width: 1000px; /* Respects original width on desktop */
+            width: 100%;      /* Allows shrinking on mobile */
+            max-height: 700px; /* Respects original height on large screens */
+            height: 85vh;     /* Flexible height based on screen size */
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border-radius: 8px;
             overflow: hidden;
@@ -39,9 +46,16 @@
             border-radius: 4px;
             padding: 4px 10px;
             flex-grow: 1;
-            margin: 0 20px;
+            margin: 0 10px; /* Reduced margin for mobile */
             color: #333;
+            /* Added to prevent long URLs from breaking layout */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
+
+        /* --- NO OTHER CHANGES NEEDED BELOW --- */
+
         .content-frame {
             width: 100%;
             height: calc(100% - 36px); 
@@ -68,7 +82,7 @@
             <span class="nav-button" id="reloadBtn">&#x21BB;</span>
 
             <div class="url-box" id="urlBox">
-                **.../The-Global-Web-Repo/site-A-google.com/index.html**
+                .../The-Global-Web-Repo/site-A-google.com/index.html
             </div>
             <span>...</span>
         </div>
@@ -82,6 +96,7 @@
     </div>
     
     <script>
+        // --- SCRIPT REMAINS 100% UNCHANGED ---
         const iframe = document.getElementById('conceptual_browser_iframe');
         const urlBox = document.getElementById('urlBox');
         
