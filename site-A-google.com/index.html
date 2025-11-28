@@ -4,103 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Concept - Global Search Index</title>
+    <!-- Load Inter font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Load Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Minimal styling to center content and maintain fixed width */
+        /* Custom font family setting */
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 50px 0;
-            text-align: center;
-            background-color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fc; /* Light background for a modern feel */
             color: #202124;
+            min-height: 100vh;
         }
-        .container {
-            width: 580px; /* A common search engine width */
-            margin: 0 auto; /* Center the container */
-            padding-top: 50px;
-        }
-        .logo-text {
-            font-size: 50px;
-            font-weight: bold;
-            margin-bottom: 25px;
-        }
-        .logo-text span:nth-child(1) { color: #4285F4; }
-        .logo-text span:nth-child(2) { color: #EA4335; }
-        .logo-text span:nth-child(3) { color: #FBBC05; }
-        .logo-text span:nth-child(4) { color: #4285F4; }
-        .logo-text span:nth-child(5) { color: #34A853; }
-        .logo-text span:nth-child(6) { color: #EA4335; }
-
-        .search-box {
-            width: 100%;
-            height: 44px;
-            border: 1px solid #dadce0;
-            border-radius: 24px;
-            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            color: #5f6368;
-        }
-        .search-input {
-            width: 80%;
-            border: none;
-            outline: none;
-            padding: 0 10px;
-            text-align: left;
-        }
-        .result-links {
-            text-align: left;
-            margin-top: 40px;
-        }
-        .result-links h3 {
-            font-size: 20px;
-            font-weight: normal;
-            margin-bottom: 15px;
-            color: #4285F4; /* Link color */
-        }
-        .result-links p {
-            font-size: 14px;
-            color: #5f6368;
-            margin-bottom: 20px;
-        }
-        .link-url {
-            color: #006621;
-            font-size: 14px;
+        /* Google-like Logo Coloring */
+        .logo-text span:nth-child(1) { color: #4285F4; } /* G (Blue) */
+        .logo-text span:nth-child(2) { color: #EA4335; } /* o (Red) */
+        .logo-text span:nth-child(3) { color: #FBBC05; } /* o (Yellow) */
+        .logo-text span:nth-child(4) { color: #4285F4; } /* g (Blue) */
+        .logo-text span:nth-child(5) { color: #34A853; } /* l (Green) */
+        .logo-text span:nth-child(6) { color: #EA4335; } /* e (Red) */
+        
+        /* Apply smooth transition to search box for focus effect */
+        .search-container {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="logo-text">
-            <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
-        </div>
+<body class="p-4 sm:p-8">
 
-        <div class="search-box">
-            <span class="search-input">**Search the Global Repo...**</span>
-        </div>
-
-        <div class="result-links">
-            <h2>Search Results for "Current Global Structure"</h2>
-            
-            <a href="../site-B-cnn.com/index.html" style="text-decoration: none;">
-                <h3>News, World, and U.S. Coverage | site-B-cnn.com</h3>
-            </a>
-            <p class="link-url">**site-B-cnn.com**/index.html</p>
-            <p>A conceptual news hub detailing headlines on **Tech & AI** and software development topics like **LocalStorage** and OS structure (**Linux Mint** vs. Windows).</p>
-
-            <a href="../site-C-wikipedia.org/index.html" style="text-decoration: none;">
-                <h3>Conceptual Repository Model - Wikipedia.org</h3>
-            </a>
-            <p class="link-url">**site-C-wikipedia.org**/index.html</p>
-            <p>The definitive article on the **Global Repository Model**, explaining how the entire web can be represented using a single Git index and **relative paths**.</p>
-        </div>
-        
-        <footer>
-            <p style="font-size: 12px; margin-top: 50px;">Conceptual Search Index - Part of The-Global-Web-Repo.</p>
-        </footer>
+    <div id="app" class="max-w-3xl mx-auto">
+        <!-- Application content will be rendered here by JavaScript -->
     </div>
+
+    <!-- JavaScript for Routing and Content Rendering -->
+    <script>
+        // Use history API for clean URLs (optional, but good practice)
+        window.onpopstate = () => renderApp(window.location.hash.substring(1));
+
+        // Initial application state (uses hash for simple routing)
+        let state = {
+            page: window.location.hash.substring(1) || 'home', // 'home' or 'about'
+        };
+
+        const app = document.getElementById('app');
+
+        /**
+         * Function to change the application view state.
+         * @param {string} newPage - The target page ('home' or 'about').
+         */
+        function navigate(newPage) {
+            state.page = newPage;
+            window.location.hash = newPage === 'home' ? '' : newPage;
+            renderApp(newPage);
+        }
+
+        // --- Component Rendering Functions ---
+
+        /** Renders the Logo and Navigation Header */
+        function renderHeader() {
+            // Small logo in the header is only visible on the 'about' page (or search results)
+            const logoClasses = state.page === 'home' ? 'hidden' : 'logo-text text-3xl font-bold tracking-tight cursor-pointer';
+
+            return `
+                <header class="flex justify-between items-center py-4 px-0">
+                    <div class="${logoClasses}" onclick="navigate('home')">
+                        <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+                    </div>
+                    <!-- Navigation/About Button. Align right on home page since no logo is present on the left. -->
+                    <nav class="${state.page === 'home' ? 'w-full flex justify-end' : ''}">
+                        <button onclick="navigate('${state.page === 'home' ? 'about' : 'home'}')"
+                            class="text-sm font-medium px-4 py-2 rounded-full transition-colors ${state.page === 'home' ? 'bg-blue-500 text-white hover:bg-blue-600' : 'text-gray-600 hover:bg-gray-100'}"
+                        >
+                            ${state.page === 'home' ? 'About the Index' : 'Back to Search'}
+                        </button>
+                    </nav>
+                </header>
+            `;
+        }
+
+        /** Renders the Home/Search Page content */
+        function renderHome() {
+            return `
+                <div class="flex flex-col items-center pt-16 pb-16 min-h-[70vh]">
+                    
+                    <!-- Centered Google Logo (Big) -->
+                    <div class="logo-text text-[80px] leading-none font-extrabold mb-10 cursor-default">
+                        <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+                    </div>
+                    
+                    <!-- Search Box -->
+                    <div class="search-container w-full max-w-xl mx-auto flex items-center h-12 border border-gray-300 rounded-full shadow-lg hover:shadow-xl focus-within:shadow-2xl transition-all mb-12 bg-white">
+                        <svg class="w-5 h-5 ml-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input type="text" placeholder="Search the Global Repository..." class="flex-grow border-none outline-none px-4 py-2 bg-transparent text-gray-700 placeholder-gray-400 text-base rounded-full" readonly>
+                        <svg class="w-5 h-5 mr-4 text-blue-500 cursor-pointer hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </div>
+
+                    <div class="w-full max-w-xl text-left">
+                        <h2 class="text-xl font-semibold text-gray-600 mb-6 border-b pb-2">Results for "Current Global Structure"</h2>
+
+                        <!-- Result 1 -->
+                        <div class="mb-6 group">
+                            <a href="../site-B-cnn.com/index.html" class="text-xl text-blue-800 hover:underline group-hover:text-blue-600 font-medium transition-colors" target="_blank" rel="noopener noreferrer">
+                                News, World, and U.S. Coverage | site-B-cnn.com
+                            </a>
+                            <p class="text-sm text-green-700 mt-1 mb-1">
+                                site-B-cnn.com/index.html
+                            </p>
+                            <p class="text-gray-600 text-base">
+                                A conceptual news hub detailing headlines on Tech & AI and software development topics like LocalStorage and OS structure (Linux Mint vs. Windows).
+                            </p>
+                        </div>
+
+                        <!-- Result 2 -->
+                        <div class="mb-6 group">
+                            <a href="../site-C-wikipedia.org/index.html" class="text-xl text-blue-800 hover:underline group-hover:text-blue-600 font-medium transition-colors" target="_blank" rel="noopener noreferrer">
+                                Conceptual Repository Model - Wikipedia.org
+                            </a>
+                            <p class="text-sm text-green-700 mt-1 mb-1">
+                                site-C-wikipedia.org/index.html
+                            </p>
+                            <p class="text-gray-600 text-base">
+                                The definitive article on the Global Repository Model, explaining how the entire web can be represented using a single Git index and relative paths.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Google-style Footer -->
+                <footer class="mt-4 w-full bg-gray-100 border-t border-gray-200 text-sm text-gray-700">
+                    <!-- Links Section (Now filling the top bar where Location used to be) -->
+                    <div class="px-8 py-3 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
+                        <div class="flex space-x-6 text-xs sm:text-sm">
+                            <a href="#" class="hover:underline text-gray-600">Conceptual Advertising</a>
+                            <a href="#" class="hover:underline text-gray-600">Global Business</a>
+                            <a href="#" class="hover:underline text-gray-600">How Indexing Works</a>
+                        </div>
+                        <div class="flex space-x-6 text-xs sm:text-sm">
+                            <a href="#" class="hover:underline text-gray-600">Privacy</a>
+                            <a href="#" class="hover:underline text-gray-600">Terms</a>
+                            <a href="#" class="hover:underline text-gray-600">Settings</a>
+                        </div>
+                    </div>
+                </footer>
+            `;
+        }
+
+        /** Renders the About Page content */
+        function renderAbout() {
+            return `
+                <div class="py-10 px-4 sm:px-0">
+                    <h1 class="text-4xl font-bold text-gray-800 mb-6 border-b-2 pb-2">About the Global Index</h1>
+                    
+                    <p class="text-lg text-gray-700 mb-6">
+                        This conceptual project explores the idea of a **Global Repository Model**—a unified, version-controlled index of all public web content. Imagine the entire internet, or a substantial, historical snapshot of it, residing within a massive, single Git-like structure.
+                    </p>
+
+                    <h2 class="text-2xl font-semibold text-gray-700 mb-4 mt-8">The Core Concepts</h2>
+                    
+                    <div class="space-y-4 text-gray-600">
+                        <p>
+                            <strong class="text-blue-600">Single Indexing:</strong> Rather than relying on disparate crawling mechanisms, all content is mapped via <code class="bg-gray-200 px-1 rounded text-sm">relative paths</code>, meaning every link is inherently understood within the greater context of the repository. This eliminates broken links and ensures historical data integrity.
+                        </p>
+                        <p>
+                            <strong class="text-blue-600">Version Control:</strong> Every website and page is treated as a file, allowing for instantaneous rollback to any point in time. Developers could trace the evolution of UI/UX, like when major frameworks (React, Angular) shifted, or see how security protocols evolved.
+                        </p>
+                        <p>
+                            <strong class="text-blue-600">Immediate Access:</strong> By leveraging this consolidated structure, search results are returned not just as links, but as guaranteed snapshots of the content, making information retrieval hyper-efficient. This is particularly relevant for studying trends in areas like <strong class="text-indigo-600">AI development</strong> and software architectures.
+                        </p>
+                        <p>
+                            <strong class="text-blue-600">Connor's Note:</strong> This model aligns with the simplicity and efficiency of direct file path access, much like local file system navigation or developing <code class="bg-gray-200 px-1 rounded text-sm">LocalStorage</code> applications—just on a planetary scale.
+                        </p>
+                    </div>
+
+                    <p class="mt-8 text-sm text-gray-500">
+                        This demonstration is an abstract visualization for a search index operating on such a hypothetical model. No actual data is indexed or stored.
+                    </p>
+                </div>
+            `;
+        }
+
+
+        /** Main Application Renderer */
+        function renderApp(targetPage = state.page) {
+            state.page = targetPage;
+            let content = '';
+
+            switch (state.page) {
+                case 'about':
+                    content = renderAbout();
+                    break;
+                case 'home':
+                default:
+                    content = renderHome();
+                    break;
+            }
+
+            // Render the header and the main content container
+            app.innerHTML = renderHeader() + content;
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            renderApp(state.page);
+        });
+
+    </script>
 </body>
 </html>
